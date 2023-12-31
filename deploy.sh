@@ -32,3 +32,4 @@ fi
 
 echo "$action sette_mezzo" 
 docker-compose $docker_command > docker_logs.txt
+
