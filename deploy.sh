@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function usage {
     echo "Usage: $0 (start|build|restart|stop)"
     exit 1
@@ -31,5 +30,5 @@ else
     usage
 fi
 
-echo "$action eight-puzzle"
+echo "$action sette_mezzo" 
 docker-compose $docker_command > docker_logs.txt
