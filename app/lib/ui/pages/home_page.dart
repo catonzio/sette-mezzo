@@ -113,10 +113,10 @@ class HomeBody extends StatelessWidget {
   final double playerWidth = 0.5;
   final double playerHeight = 0.4;
 
-  final double buttonsTop = 0.1;
+  final double buttonsTop = 0.03;
   final double buttonsLeft = 0.1;
   final double buttonsWidth = 0.2;
-  final double buttonsHeight = 0.4;
+  final double buttonsHeight = 0.05;
 
   HomeBody({super.key});
 
@@ -125,6 +125,13 @@ class HomeBody extends StatelessWidget {
     double cardHeight = context.height * 0.2;
     double cardWidth = cardHeight * cardRatio;
     double width = context.width;
+
+    ActionButtons actionButtonsW = ActionButtons(
+        buttonWidth: context.width * buttonsWidth,
+        buttonHeight: context.height * buttonsHeight);
+    List<ActionButton> actionButtons =
+        (actionButtonsW.actionButtons[controller.gameStatus] ?? []);
+
     return Stack(
       children: [
         Positioned(
@@ -141,7 +148,6 @@ class HomeBody extends StatelessWidget {
             top: context.height * deckTop,
             left: width * deckLeft,
             child: DeckWidget(
-              deck: controller.deckController.deck,
               width: width * deckWidth,
               height: context.height * deckHeight,
             )),
@@ -170,11 +176,11 @@ class HomeBody extends StatelessWidget {
         ),
         Positioned(
           bottom: context.height * buttonsTop,
-          left: width * buttonsLeft,
-          child: ActionButtons(
-              controller: controller,
-              width: width * buttonsWidth,
-              height: context.height * buttonsHeight),
+          left: width * 0.5 -
+              (width * buttonsWidth * actionButtons.length +
+                      context.width * buttonsWidth) /
+                  2,
+          child: actionButtonsW,
         )
       ],
     );

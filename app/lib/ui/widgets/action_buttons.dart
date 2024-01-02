@@ -7,67 +7,75 @@ import 'bet_dialog.dart';
 import '../../utils/extensions.dart';
 
 class ActionButtons extends StatelessWidget {
-  final GameController controller;
-  final double width;
-  final double height;
+  final GameController controller = Get.find<GameController>();
+  final double buttonWidth;
+  final double buttonHeight;
 
-  const ActionButtons(
-      {super.key,
-      required this.controller,
-      required this.width,
-      required this.height});
+  ActionButtons(
+      {super.key, required this.buttonWidth, required this.buttonHeight});
 
   @override
   Widget build(BuildContext context) {
-    double buttonWidth = width * 2 / 3;
-    double buttonHeight = height / 7;
+    List<Widget> buttons =
+        actionButtons[controller.gameStatus] ?? []; // getButtons(context);
+
     return Material(
       elevation: 5,
       color: context.theme.colorScheme.surface.withOpacity(0.5),
-      child: SizedBox(
-        width: width,
-        height: height,
-        child: Column(
+      child: Container(
+        color: Colors.red,
+        width: buttonWidth * buttons.length + buttonWidth,
+        height: buttonHeight,
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ActionButton(
-              text: "Give cards",
-              onPressed: () {
-                controller.deckController.preloadImages();
-                controller.start(shuffle: true);
-              },
-              width: buttonWidth,
-              height: buttonHeight,
-              isDisabled: controller.gameStatus != GameStatus.notPlaying,
-            ),
-            ActionButton(
-              text: "Bet",
-              onPressed: () => showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    BetDialog(controller: controller),
-              ),
-              width: buttonWidth,
-              height: buttonHeight,
-              isDisabled: controller.gameStatus != GameStatus.betting,
-            ),
-            ActionButton(
-              text: "Take card",
-              onPressed: controller.playerGetCard,
-              width: buttonWidth,
-              height: buttonHeight,
-              isDisabled: controller.gameStatus != GameStatus.playerPlaying,
-            ),
-            ActionButton(
-              text: "Still",
-              onPressed: controller.playerStop,
-              width: buttonWidth,
-              height: buttonHeight,
-              isDisabled: controller.gameStatus != GameStatus.playerPlaying,
-            ),
-          ],
+          children: buttons,
         ),
       ),
+    );
+  }
+
+  Map<GameStatus, List<ActionButton>> get actionButtons => {
+        GameStatus.notPlaying: [
+          ActionButton(
+            text: "Give cards",
+            onPressed: giveCards,
+            width: buttonWidth,
+            height: buttonHeight,
+          ),
+        ],
+        GameStatus.betting: [
+          ActionButton(
+            text: "Bet",
+            onPressed: bet,
+            width: buttonWidth,
+            height: buttonHeight,
+          ),
+        ],
+        GameStatus.playerPlaying: [
+          ActionButton(
+            text: "Take card",
+            onPressed: controller.playerGetCard,
+            width: buttonWidth,
+            height: buttonHeight,
+          ),
+          ActionButton(
+            text: "Still",
+            onPressed: controller.playerStop,
+            width: buttonWidth,
+            height: buttonHeight,
+          )
+        ],
+      };
+
+  void giveCards() {
+    controller.deckController.preloadImages();
+    controller.start(shuffle: true);
+  }
+
+  void bet() {
+    showDialog(
+      context: Get.context!,
+      builder: (BuildContext context) => BetDialog(controller: controller),
     );
   }
 }
@@ -75,7 +83,6 @@ class ActionButtons extends StatelessWidget {
 class ActionButton extends StatelessWidget {
   final String text;
   final Function() onPressed;
-  final bool isDisabled;
   final double width;
   final double height;
 
@@ -84,17 +91,10 @@ class ActionButton extends StatelessWidget {
       required this.text,
       required this.onPressed,
       required this.width,
-      required this.height,
-      this.isDisabled = false});
+      required this.height});
 
   @override
   Widget build(BuildContext context) {
-    Function()? onPressed = isDisabled ? null : this.onPressed;
-    TextStyle? style = isDisabled
-        ? context.theme.textTheme.labelLarge?.copyWith(
-            color: context.theme.colorScheme.onSurface.withOpacity(0.5))
-        : context.theme.textTheme.labelLarge;
-
     return SizedBox(
       width: width,
       height: height,
@@ -102,8 +102,14 @@ class ActionButton extends StatelessWidget {
           onPressed: onPressed,
           child: AutoSizeText(
             text,
-            style: style,
+            style: context.theme.textTheme.labelLarge,
             presetFontSizes: [
+              context.headlineLargeFontSize,
+              context.headlineMediumFontSize,
+              context.headlineSmallFontSize,
+              context.bodyLargeFontSize,
+              context.bodyMediumFontSize,
+              context.bodySmallFontSize,
               context.labelLargeFontSize,
               context.labelMediumFontSize,
               context.labelSmallFontSize,

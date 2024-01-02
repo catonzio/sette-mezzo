@@ -22,7 +22,9 @@ class CardWidget extends StatelessWidget {
         width: width,
         height: height,
         alignment: Alignment.center,
-        decoration: BoxDecoration(border: Border.all(color: Colors.white)),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.white),
+            borderRadius: BorderRadius.circular(8)),
         child: AutoSizeText(
           "No cards",
           style: context.textTheme.displaySmall,
@@ -32,17 +34,21 @@ class CardWidget extends StatelessWidget {
         ),
       );
     } else {
-      return Obx(() => Container(
-            width: width,
-            height: height,
-            // decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-            alignment: Alignment.center,
-            child: card!.isCover
-                ? Image.asset("$cardsPath/cover.jpg")
-                : Image.asset(
-                    card!.imagePath,
-                    fit: BoxFit.fill,
-                  ),
+      return Obx(() => ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              width: width,
+              height: height,
+              // decoration: BoxDecoration(border: Border.all(color: Colors.white)),
+              alignment: Alignment.center,
+              child: card!.isCover
+                  ? Image.asset("$cardsPath/cover.jpg")
+                  : Image.asset(
+                      card!.imagePath,
+                      fit: BoxFit.fill,
+                      filterQuality: FilterQuality.high,
+                    ),
+            ),
           ));
     }
   }

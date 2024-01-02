@@ -1,27 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sette_e_mezzo/utils/utils.dart';
-import 'dart:math' as math;
-import '../../data/models/deck.dart';
+import 'package:get/get.dart';
+import 'package:sette_e_mezzo/data/controllers/deck_controller.dart';
 
 class DeckWidget extends StatelessWidget {
-  final Deck deck;
-  final List<double> angles;
+  final DeckController deck = Get.find<DeckController>();
+  // final List<double> angles;
   final double width;
   final double height;
 
   DeckWidget(
       {super.key,
-      required this.deck,
       required this.width,
-      required this.height})
-      : angles = generateAngles(deck.cards.length);
-
-  static List<double> generateAngles(int num) {
-    math.Random source = math.Random();
-    return [
-      for (int i = 0; i < num; i++) doubleInRange(source, -0.05, 0.05) * math.pi
-    ];
-  }
+      required this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +27,7 @@ class DeckWidget extends StatelessWidget {
       height: height,
       child: Stack(
         children: [
-          for (double angle in angles)
+          for (double angle in deck.angles)
             Positioned(
               top: 0,
               left: 0,
