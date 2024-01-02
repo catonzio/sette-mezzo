@@ -20,7 +20,8 @@ class GameController extends GetxController {
   double get bet => _bet.value;
   set bet(double value) => _bet.value = value;
 
-  final TextEditingController betController = TextEditingController();
+  final TextEditingController betController =
+      TextEditingController(text: "0.0");
 
   bool get gameIsOver => [
         GameStatus.dealerOver,

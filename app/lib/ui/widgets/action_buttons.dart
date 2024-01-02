@@ -1,9 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sette_e_mezzo/data/controllers/game_controller.dart';
-import 'package:sette_e_mezzo/data/models/enums.dart';
-import 'package:sette_e_mezzo/ui/widgets/bet_dialog.dart';
+import '../../data/controllers/game_controller.dart';
+import '../../data/models/enums.dart';
+import 'bet_dialog.dart';
+import '../../utils/extensions.dart';
 
 class ActionButtons extends StatelessWidget {
   final GameController controller;
@@ -18,6 +19,8 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double buttonWidth = width * 2 / 3;
+    double buttonHeight = height / 7;
     return Material(
       elevation: 5,
       color: context.theme.colorScheme.surface.withOpacity(0.5),
@@ -29,8 +32,12 @@ class ActionButtons extends StatelessWidget {
           children: [
             ActionButton(
               text: "Give cards",
-              onPressed: () => controller.start(shuffle: true),
-              width: width * 2 / 3,
+              onPressed: () {
+                controller.deckController.preloadImages();
+                controller.start(shuffle: true);
+              },
+              width: buttonWidth,
+              height: buttonHeight,
               isDisabled: controller.gameStatus != GameStatus.notPlaying,
             ),
             ActionButton(
@@ -40,19 +47,22 @@ class ActionButtons extends StatelessWidget {
                 builder: (BuildContext context) =>
                     BetDialog(controller: controller),
               ),
-              width: width * 2 / 3,
+              width: buttonWidth,
+              height: buttonHeight,
               isDisabled: controller.gameStatus != GameStatus.betting,
             ),
             ActionButton(
               text: "Take card",
               onPressed: controller.playerGetCard,
-              width: width * 2 / 3,
+              width: buttonWidth,
+              height: buttonHeight,
               isDisabled: controller.gameStatus != GameStatus.playerPlaying,
             ),
             ActionButton(
               text: "Still",
               onPressed: controller.playerStop,
-              width: width * 2 / 3,
+              width: buttonWidth,
+              height: buttonHeight,
               isDisabled: controller.gameStatus != GameStatus.playerPlaying,
             ),
           ],
@@ -67,38 +77,39 @@ class ActionButton extends StatelessWidget {
   final Function() onPressed;
   final bool isDisabled;
   final double width;
+  final double height;
 
   const ActionButton(
       {super.key,
       required this.text,
       required this.onPressed,
       required this.width,
+      required this.height,
       this.isDisabled = false});
 
   @override
   Widget build(BuildContext context) {
-    if (isDisabled) {
-      return SizedBox(
-        width: width,
-        child: ElevatedButton(
-            onPressed: null,
-            child: AutoSizeText(
-              text,
-              style: context.theme.textTheme.labelLarge?.copyWith(
-                  color: context.theme.colorScheme.onSurface.withOpacity(0.5)),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            )),
-      );
-    }
+    Function()? onPressed = isDisabled ? null : this.onPressed;
+    TextStyle? style = isDisabled
+        ? context.theme.textTheme.labelLarge?.copyWith(
+            color: context.theme.colorScheme.onSurface.withOpacity(0.5))
+        : context.theme.textTheme.labelLarge;
+
     return SizedBox(
       width: width,
+      height: height,
       child: ElevatedButton(
           onPressed: onPressed,
           child: AutoSizeText(
             text,
-            style: context.theme.textTheme.labelLarge,
-            maxLines: 1,
+            style: style,
+            presetFontSizes: [
+              context.labelLargeFontSize,
+              context.labelMediumFontSize,
+              context.labelSmallFontSize,
+              context.labelSmallFontSize / 1.1,
+            ],
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           )),
     );

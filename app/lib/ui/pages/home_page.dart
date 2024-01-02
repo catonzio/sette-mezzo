@@ -6,6 +6,7 @@ import 'package:sette_e_mezzo/data/controllers/home_controller.dart';
 import 'package:sette_e_mezzo/ui/widgets/deck_widget.dart';
 import 'package:sette_e_mezzo/ui/widgets/menu_dialog.dart';
 import 'package:sette_e_mezzo/ui/widgets/statistics_widget.dart';
+import 'dart:math' as math;
 
 import '../../data/controllers/game_controller.dart';
 import '../../utils/constants.dart';
@@ -21,6 +22,8 @@ class HomePage extends StatelessWidget {
 
     final double halfCircleHeight = context.height * 0.025;
     final double halfCircleWidth = context.width * 0.025;
+    final double halfCircleDiameter =
+        math.max(halfCircleHeight, halfCircleWidth);
 
     return Scaffold(body: GetX<GameController>(
       builder: (controller) {
@@ -31,16 +34,12 @@ class HomePage extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Obx(
-                    () => Positioned(
-                      top: 0,
-                      left: 0,
-                      width: context.width,
-                      height: context.height,
-                      child: HomeBody(
-                        awidth: context.width * homeController.percentage,
-                      ),
-                    ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    width: context.width,
+                    height: context.height,
+                    child: HomeBody(),
                   ),
                   if (homeController.isStatisticsOpen)
                     Positioned(
@@ -54,11 +53,11 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   Positioned(
-                      top: context.height * 0.5 - halfCircleHeight / 2,
+                      top: context.height * 0.5 - halfCircleDiameter / 2,
                       left: context.width * homeController.percentage -
-                          halfCircleWidth / 2,
-                      height: halfCircleHeight,
-                      width: halfCircleWidth,
+                          halfCircleDiameter / 2,
+                      height: halfCircleDiameter,
+                      width: halfCircleDiameter,
                       child: GestureDetector(
                         onPanUpdate: (details) {
                           if (homeController.isStatisticsOpen) {
@@ -75,8 +74,8 @@ class HomePage extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: context.theme.colorScheme.primary,
                           ),
-                          width: halfCircleWidth,
-                          height: halfCircleHeight,
+                          width: halfCircleDiameter,
+                          height: halfCircleDiameter,
                         ),
                       )),
                 ],
@@ -98,7 +97,6 @@ class HomePage extends StatelessWidget {
 
 class HomeBody extends StatelessWidget {
   final GameController controller = Get.find<GameController>();
-  final double awidth;
 
   final double deckTop = 0.05;
   final double deckLeft = 0.1;
@@ -120,7 +118,7 @@ class HomeBody extends StatelessWidget {
   final double buttonsWidth = 0.2;
   final double buttonsHeight = 0.4;
 
-  HomeBody({super.key, required this.awidth});
+  HomeBody({super.key});
 
   @override
   Widget build(BuildContext context) {

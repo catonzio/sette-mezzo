@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:sette_e_mezzo/utils/constants.dart';
 
 import '../models/card.dart';
 import '../models/deck.dart';
@@ -7,6 +9,12 @@ class DeckController extends GetxController {
   final Deck deck;
 
   DeckController() : deck = Deck.generateCards();
+
+  void preloadImages() {
+    for (CardModel card in deck.cards) {
+      precacheImage(AssetImage(card.imagePath), Get.context!, size: cardSize);
+    }
+  }
 
   void shuffle() {
     reset();
