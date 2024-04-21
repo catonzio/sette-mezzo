@@ -131,7 +131,9 @@ class HomeBody extends StatelessWidget {
         buttonHeight: context.height * buttonsHeight);
     List<ActionButton> actionButtons =
         (actionButtonsW.actionButtons[controller.gameStatus] ?? []);
-
+    double actionButtonsWidth =
+        width * (buttonsWidth * actionButtons.length + buttonsWidth / 3);
+    print("Home width: ${actionButtonsWidth}");
     return Stack(
       children: [
         Positioned(
@@ -176,10 +178,9 @@ class HomeBody extends StatelessWidget {
         ),
         Positioned(
           bottom: context.height * buttonsTop,
-          left: width * 0.5 -
-              (width * buttonsWidth * actionButtons.length +
-                      context.width * buttonsWidth) /
-                  2,
+          left: width * playerLeft -
+              actionButtonsWidth / 2 +
+              width * playerWidth / 2,
           child: actionButtonsW,
         )
       ],

@@ -18,13 +18,13 @@ class ActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> buttons =
         actionButtons[controller.gameStatus] ?? []; // getButtons(context);
-
+    print("Actions width: ${buttonWidth * buttons.length + buttonWidth / 3}");
     return Material(
       elevation: 5,
       color: context.theme.colorScheme.surface.withOpacity(0.5),
       child: Container(
         color: Colors.red,
-        width: buttonWidth * buttons.length + buttonWidth,
+        width: buttonWidth * buttons.length + buttonWidth / 3,
         height: buttonHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
